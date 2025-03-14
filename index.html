@@ -3,52 +3,249 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Serviços - SFTEC</title>
-  <link rel="stylesheet" href="style/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Login - SFTEC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Estilos Globais */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0c263e, #e77929);
+      overflow: hidden;
+    }
+
+    /* Container do Login */
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Logo */
+    .logo {
+      width: 150px;
+      margin-bottom: 25px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Título */
+    .login-container h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #0c263e;
+      font-weight: 700;
+    }
+
+    /* Grupos de Input */
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .input-group input:focus {
+      border-color: #e77929;
+      box-shadow: 0 0 8px rgba(231, 121, 41, 0.3);
+    }
+
+    /* Botão de Login */
+    .login-button {
+      width: 100%;
+      padding: 14px;
+      background-color: #e77929;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .login-button:hover {
+      background-color: #d6681f;
+      transform: scale(1.02);
+    }
+
+    .login-button:active {
+      transform: scale(0.98);
+    }
+
+    /* Mensagem de Erro */
+    .error-message {
+      color: #ff4444;
+      margin-top: 15px;
+      font-size: 14px;
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-10px);
+      }
+      50% {
+        transform: translateX(10px);
+      }
+      75% {
+        transform: translateX(-10px);
+      }
+    }
+
+    /* Links do Rodapé */
+    .footer-links {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .footer-links a {
+      color: #0c263e;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #e77929;
+      text-decoration: underline;
+    }
+
+    /* Responsividade */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 20px;
+      }
+
+      .logo {
+        width: 120px;
+      }
+
+      .login-container h2 {
+        font-size: 24px;
+      }
+
+      .input-group input {
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .login-button {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="navbar">
-      <img src="/assets/img/logo.png" alt="Logo SFTEC" class="logo">
-      <P class="nome">Sistema de Serviços - SFTEC</P>
-    </div>
-  </header>
-
-  <div class="container">
-    <h2 class="titulo">O que você deseja?</h2>
-    <div class="opcao-container">
-      <div class="opcao" onclick="redirectTo('/assets/ordem.html')">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/clipboard.png" alt="Ordem de Serviço">
-        <h3>Ordem de Serviço</h3>
+  <div class="login-container">
+    <img src="/assets/img/logo.png" alt="Logo SFTEC" class="logo">
+    <h2>Login</h2>
+    <form id="login-form">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Digite seu email" required>
       </div>
-      <div class="opcao" onclick="redirectTo('/assets/relatorio.html')">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/receipt.png" alt="Nota Fiscal">
-        <h3>Gerar Relatório de Atendimento</h3>
+      <div class="input-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Digite sua senha" required>
       </div>
-      <!-- Novo card para Consultar Relatórios -->
-      <div class="opcao" onclick="redirectTo('/assets/relatoriossalvo.html')">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/pie-chart.png" alt="Relatórios">
-        <h3>Consultar Relatório de Atendimento</h3>
-      </div>
-      <!-- Card Inventário / Estoque -->
-      <div class="opcao" onclick="redirectTo('/assets/cadastro.html')">
-        <i class="fas fa-box-open fa-3x" style="color: white;"></i>
-        <h3>Cadastrar Produtos</h3>
-      </div>
-      <!-- Card Listar Produtos -->
-      <div class="opcao" onclick="redirectTo('/assets/estoque.html')">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/list.png" alt="Estoque">
-        <h3>Estoque</h3>
-      </div>
+      <button type="submit" class="login-button">Entrar</button>
+      <div id="error-message" class="error-message"></div>
+    </form>
+    <div class="footer-links">
+      <a href="#">Esqueci minha senha</a>
     </div>
   </div>
 
-  <script>
-    function redirectTo(page) {
-      window.location.href = page;
-    }
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Importe as funções necessárias do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9vAauXiePp9M551lm3EzrbarRiRW4xI8",
+      authDomain: "sftec-b88c3.firebaseapp.com",
+      databaseURL: "https://sftec-b88c3-default-rtdb.firebaseio.com",
+      projectId: "sftec-b88c3",
+      storageBucket: "sftec-b88c3.firebasestorage.app",
+      messagingSenderId: "240727673529",
+      appId: "1:240727673529:web:063244b1d3548c0e876968"
+    };
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Função para fazer login
+    const loginForm = document.getElementById('login-form');
+    const errorMessage = document.getElementById('error-message');
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Login bem-sucedido
+          const user = userCredential.user;
+          window.location.href = '/inicio.html'; // Redireciona para a página de dashboard
+        })
+        .catch((error) => {
+          // Tratamento de erros
+          errorMessage.textContent = error.message;
+        });
+    });
   </script>
 </body>
 </html>
