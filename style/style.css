@@ -1,0 +1,100 @@
+/* Definindo o estilo básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Estilo do header */
+header {
+  background-color: #5b6b7b; /* Cor de fundo ajustada */
+  padding: 20px;
+  color: white;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  margin-right: 20px;
+}
+
+.nome {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Container principal */
+.container {
+  padding: 20px;
+}
+
+/* Título */
+.titulo {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #0e0a3c; /* Título com a cor escura para destaque */
+}
+
+/* Estilo para o container das opções */
+.opcao-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+/* Estilo para cada opção */
+.opcao {
+  background-color: #e77929; /* Cor de fundo ajustada */
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease; /* Transição para cor e movimento */
+  width: 100%;
+  max-width: 250px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para os cards */
+}
+
+/* Efeito hover nos cards */
+.opcao:hover {
+  transform: translateY(-5px);
+  background-color: #5b6b7b; /* Cor de fundo no hover */
+}
+
+.opcao img {
+  margin-bottom: 10px;
+  width: 40px; /* Ajustando o tamanho dos ícones */
+  height: 40px;
+}
+
+.opcao h3 {
+  font-size: 18px;
+  color: white;
+  font-weight: 700;
+}
+
+/* Estilo de responsividade */
+@media (max-width: 768px) {
+  .opcao-container {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .opcao-container {
+      grid-template-columns: 1fr;
+  }
+}

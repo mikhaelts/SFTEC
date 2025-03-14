@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios de Manutenção</title>
+    <link rel="stylesheet" href="/style/relatoriosalvo.css">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+      
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/index.html">Relatórios de Manutenção</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assets/ordem.html">Ordem deServiço</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assets/cadastro.html">Cadastrar Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assets/estoque.html">Estoque</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <img src="/assets/img/logo.png" alt="Logo">
+                Relatórios de Manutenção
+            </div>
+
+            <!-- Filtro de data -->
+            <div class="filter-bar">
+                <div class="col-md-6">
+                    <label for="startDate">Data Início</label>
+                    <input type="date" id="startDate" class="form-control" aria-label="Data de Início" placeholder="Data de Início">
+                </div>
+                <div class="col-md-6">
+                    <label for="endDate">Data Fim</label>
+                    <input type="date" id="endDate" class="form-control" aria-label="Data de Fim" placeholder="Data de Fim">
+                </div>
+                <button id="filterBtn" class="btn-filter">Filtrar Agora</button>
+            </div>
+
+            <!-- Indicador de carregamento -->
+            <div id="loading">
+                <i class="fas fa-spinner fa-spin"></i> Carregando...
+            </div>
+
+            <!-- Exibir total de ganhos e custos -->
+            <div id="totalContainer" class="total-container" style="display: none;">
+                <div class="total-box">
+                    <strong>Total de Custos:</strong> R$ <span id="totalCost">0.00</span><br>
+                    <strong>Total de Ganhos:</strong> R$ <span id="totalRevenue">0.00</span>
+                </div>
+            </div>
+
+            <!-- Lista de relatórios -->
+            <div id="reportList" style="display: none;"></div>
+            <div id="noResults" class="no-results" style="display: none;">
+                <i class="fas fa-info-circle"></i> Nenhum relatório encontrado para esse período.
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Voltar para Home -->
+    <button class="btn-voltar-home" onclick="window.location.href='/index.html'">
+        <i class="fas fa-home"></i>
+    </button>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9vAauXiePp9M551lm3EzrbarRiRW4xI8",
+            authDomain: "sftec-b88c3.firebaseapp.com",
+            databaseURL: "https://sftec-b88c3-default-rtdb.firebaseio.com",
+            projectId: "sftec-b88c3",
+            storageBucket: "sftec-b88c3.appspot.com",
+            messagingSenderId: "240727673529",
+            appId: "1:240727673529:web:063244b1d3548c0e876968"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Função para carregar os relatórios
+        async function loadReports(startDate, endDate) {
+            const reportList = document.getElementById('reportList');
+            const reportsRef = ref(db, 'relatorios');
+            reportList.innerHTML = ""; // Limpa a lista de relatórios antes de carregar os novos
+            let totalRevenue = 0;
+            let totalCost = 0;
+
+            document.getElementById('loading').style.display = "block"; // Exibe o indicador de carregamento
+            document.getElementById('noResults').style.display = "none"; // Oculta a mensagem de nenhum resultado
+
+            try {
+                const snapshot = await get(reportsRef); // Carrega todos os dados de uma vez
+                snapshot.forEach((childSnapshot) => {
+                    const report = childSnapshot.val();
+                    const reportId = childSnapshot.key;
+
+                    // Verifica se o relatório está dentro do intervalo de datas
+                    if (!startDate || !endDate || (report.atendimentoData >= startDate && report.atendimentoData <= endDate)) {
+                        const reportItem = document.createElement('div');
+                        reportItem.classList.add('report-item');
+                        reportItem.innerHTML = ` 
+                            <strong><i class="fas fa-calendar-alt"></i> Data:</strong> ${report.atendimentoData}<br>
+                            <strong><i class="fas fa-file-alt"></i> Descrição:</strong> ${report.descricao}<br>
+                            <strong><i class="fas fa-dollar-sign"></i> Valor:</strong> R$ ${report.valor.toFixed(2)}<br>
+                            <strong><i class="fas fa-sticky-note"></i> Observação:</strong> ${report.observacao || 'Nenhuma'}<br>
+                            <strong><i class="fas fa-tools"></i> Custo:</strong> R$ ${report.custo.toFixed(2)}
+                            <button class="btn-delete" onclick="deleteReport('${reportId}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        `;
+                        reportList.prepend(reportItem);
+
+                        // Acumulando o total de custos e ganhos
+                        totalRevenue += parseFloat(report.valor);
+                        totalCost += parseFloat(report.custo);
+                    }
+                });
+
+                // Exibe os totais
+                document.getElementById('totalRevenue').innerText = totalRevenue.toFixed(2);
+                document.getElementById('totalCost').innerText = totalCost.toFixed(2);
+                document.getElementById('totalContainer').style.display = "block"; // Exibe a seção de totais
+
+                // Exibe a lista de relatórios
+                reportList.style.display = "block";
+
+                // Exibe mensagem se nenhum relatório for encontrado
+                if (reportList.children.length === 0) {
+                    document.getElementById('noResults').style.display = "block";
+                }
+            } catch (error) {
+                console.error("Erro ao carregar relatórios:", error);
+                alert("Erro ao carregar relatórios. Verifique o console para mais detalhes.");
+            } finally {
+                document.getElementById('loading').style.display = "none"; // Esconde o indicador de carregamento
+            }
+        }
+
+        // Função para excluir um relatório
+        window.deleteReport = function(reportId) {
+            const reportRef = ref(db, 'relatorios/' + reportId);
+            remove(reportRef)
+                .then(() => {
+                    loadReports(); // Recarrega a lista de relatórios após a exclusão
+                })
+                .catch((error) => {
+                    alert("Erro ao excluir relatório: " + error.message);
+                });
+        };
+
+        // Filtro de data
+        document.getElementById('filterBtn').addEventListener('click', () => {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (startDate && endDate) {
+                if (startDate > endDate) {
+                    alert("A data de início não pode ser maior que a data de fim.");
+                    return;
+                }
+                loadReports(startDate, endDate);
+            } else {
+                alert("Por favor, selecione as datas de início e fim.");
+            }
+        });
+
+        // Inicialmente, a lista de relatórios está oculta
+        document.getElementById('reportList').style.display = "none";
+    </script>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

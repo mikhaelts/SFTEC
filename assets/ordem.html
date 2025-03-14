@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordem de Serviço</title>
+    <link rel="stylesheet" href="/style/ordem.css">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/index.html">Sistema de Serviços - SFTEC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assets/relatorio.html">Gerar Relatórios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assets/relatoriossalvo.html">Consultar Relatorios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assets/cadastro.html">Cadatrar Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assets/estoque.html">Estoque</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Container Principal -->
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <img src="/assets/img/logo.png" alt="Logo">
+            <h2>Registrar Ordem de Serviço</h2>
+        </div>
+
+        <!-- Formulário -->
+        <div class="card">
+            <form id="orderForm">
+                <div class="mb-4">
+                    <label for="clienteNome" class="form-label">Nome do Cliente:</label>
+                    <input type="text" id="clienteNome" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="telefone" class="form-label">Telefone:</label>
+                    <input type="tel" id="telefone" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="endereco" class="form-label">Endereço:</label>
+                    <input type="text" id="endereco" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="maquinaModelo" class="form-label">Modelo da Máquina:</label>
+                    <input type="text" id="maquinaModelo" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="servicoDescricao" class="form-label">Descrição do Serviço:</label>
+                    <textarea id="servicoDescricao" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="valorEstimado" class="form-label">Valor Estimado (R$):</label>
+                    <input type="number" id="valorEstimado" class="form-control" step="0.01" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="tecnicoResponsavel" class="form-label">Técnico Responsável:</label>
+                    <input type="text" id="tecnicoResponsavel" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="dataOS" class="form-label">Data da Ordem:</label>
+                    <input type="date" id="dataOS" class="form-control" required>
+                </div>
+            </form>
+
+            <button id="generatePDF" class="btn btn-success mt-4">
+                Gerar PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Função para gerar o PDF
+        document.getElementById('generatePDF').addEventListener('click', function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Dados do formulário
+            const clienteNome = document.getElementById('clienteNome').value;
+            const telefone = document.getElementById('telefone').value;
+            const endereco = document.getElementById('endereco').value;
+            const maquinaModelo = document.getElementById('maquinaModelo').value;
+            const servicoDescricao = document.getElementById('servicoDescricao').value;
+            const valorEstimado = parseFloat(document.getElementById('valorEstimado').value).toFixed(2);
+            const tecnicoResponsavel = document.getElementById('tecnicoResponsavel').value;
+            const dataOS = document.getElementById('dataOS').value;
+
+            // Configurações do PDF
+            const margin = 10;
+            const lineHeight = 7;
+            let verticalOffset = margin;
+
+            // Função para adicionar texto com quebra de linha
+            const addTextWithLineBreaks = (text, x, y, maxWidth) => {
+                const lines = doc.splitTextToSize(text, maxWidth);
+                doc.text(lines, x, y);
+                return lines.length * lineHeight;
+            };
+
+            // Adicionar logo e nome da empresa
+            const logoUrl = 'logo.png'; // URL da logo
+            const nomeEmpresa = 'SFTEC - Manutenção de Maquinas de Impressão';
+
+            doc.addImage(logoUrl, 'PNG', margin, verticalOffset, 30, 30);
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text(nomeEmpresa, margin + 35, verticalOffset + 15);
+            verticalOffset += 40;
+
+            // Divisão visual
+            doc.setDrawColor(200);
+            doc.setLineWidth(0.5);
+            doc.line(margin, verticalOffset, 200 - margin, verticalOffset);
+            verticalOffset += 10;
+
+            // Título do documento
+            doc.setFontSize(16);
+            doc.text("Ordem de Serviço", margin, verticalOffset);
+            verticalOffset += lineHeight * 2;
+
+            // Informações do cliente
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text("Informações do Cliente:", margin, verticalOffset);
+            verticalOffset += lineHeight;
+
+            doc.setFont('helvetica', 'normal');
+            verticalOffset += addTextWithLineBreaks(`Nome: ${clienteNome}`, margin, verticalOffset, 180);
+            verticalOffset += addTextWithLineBreaks(`Telefone: ${telefone}`, margin, verticalOffset, 180);
+            verticalOffset += addTextWithLineBreaks(`Endereço: ${endereco}`, margin, verticalOffset, 180);
+            verticalOffset += lineHeight;
+
+            // Informações da máquina
+            doc.setFont('helvetica', 'bold');
+            doc.text("Informações da Máquina:", margin, verticalOffset);
+            verticalOffset += lineHeight;
+
+            doc.setFont('helvetica', 'normal');
+            verticalOffset += addTextWithLineBreaks(`Modelo: ${maquinaModelo}`, margin, verticalOffset, 180);
+            verticalOffset += lineHeight;
+
+            // Descrição do serviço
+            doc.setFont('helvetica', 'bold');
+            doc.text("Descrição do Serviço:", margin, verticalOffset);
+            verticalOffset += lineHeight;
+
+            doc.setFont('helvetica', 'normal');
+            verticalOffset += addTextWithLineBreaks(servicoDescricao, margin, verticalOffset, 180);
+            verticalOffset += lineHeight;
+
+            // Informações adicionais
+            doc.setFont('helvetica', 'bold');
+            doc.text("Detalhes Adicionais:", margin, verticalOffset);
+            verticalOffset += lineHeight;
+
+            doc.setFont('helvetica', 'normal');
+            verticalOffset += addTextWithLineBreaks(`Valor Estimado: R$ ${valorEstimado}`, margin, verticalOffset, 180);
+            verticalOffset += addTextWithLineBreaks(`Técnico Responsável: ${tecnicoResponsavel}`, margin, verticalOffset, 180);
+            verticalOffset += addTextWithLineBreaks(`Data da Ordem: ${dataOS}`, margin, verticalOffset, 180);
+
+            // Rodapé
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text("© 2025 SFTEC - Manutenção de Maquinas de Impressão", margin, 280);
+
+            // Salvar o PDF
+            doc.save('ordem_de_servico.pdf');
+        });
+    </script>
+
+</body>
+
+</html>
