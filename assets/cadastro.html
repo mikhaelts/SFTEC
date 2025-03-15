@@ -10,58 +10,88 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    
+    <style>
+        :root {
+            --primary-color: #e77929; /* Cor primária */
+            --secondary-color: #d56d24; /* Cor secundária */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding-top: 70px; /* Espaço para a Navbar fixa */
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .alert-success {
+            display: none; /* Inicialmente oculto */
+            margin-top: 20px;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: white !important;
+        }
+
+        .navbar-brand:hover,
+        .nav-link:hover {
+            color: black !important;
+        }
+
+        .navbar-toggler-icon {
+            background-color: white;
+        }
+
+        /* Estilo para a mensagem de erro */
+        .auth-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ff4444;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-in-out;
+            display: none; /* Inicialmente oculta */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+    </style>
 </head>
 
-<style>
-    :root {
-    --primary-color: #e77929; /* Cor primária */
-    --secondary-color: #d56d24; /* Cor secundária */
-}
-
-body {
-    font-family: Arial, sans-serif;
-    padding-top: 70px; /* Espaço para a Navbar fixa */
-}
-
-.container {
-    max-width: 900px;
-    margin: 20px auto;
-}
-
-.btn-custom {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.btn-custom:hover {
-    background-color: var(--secondary-color);
-}
-
-.alert-success {
-    display: none; /* Inicialmente oculto */
-    margin-top: 20px;
-}
-
-.navbar {
-    background-color: var(--primary-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-brand, .nav-link {
-    color: white !important;
-}
-
-.navbar-brand:hover, .nav-link:hover {
-    color: black !important;
-}
-
-.navbar-toggler-icon {
-    background-color: white;
-}
-</style>
-
 <body>
+    <!-- Mensagem de usuário não autenticado -->
+    <div id="auth-message" class="auth-message">Usuário não autenticado. Redirecionando para o login...</div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
@@ -145,6 +175,7 @@ body {
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
         import { getDatabase, ref, push, set, get } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
         // Configuração do Firebase
         const firebaseConfig = {
@@ -160,8 +191,24 @@ body {
         // Inicializar o Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
+        const auth = getAuth(app);
 
-        
+        // Elemento da mensagem de autenticação
+        const authMessage = document.getElementById('auth-message');
+
+        // Verifica o estado de autenticação do usuário
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Exibe a mensagem de usuário não autenticado
+                authMessage.style.display = 'block';
+
+                // Redireciona para a página de login após 3 segundos
+                setTimeout(() => {
+                    window.location.href = 'login.html'; // Altere para o caminho da sua página de login
+                }, 3000); // 3 segundos de atraso
+            }
+            // Se o usuário estiver logado, permite o acesso à página
+        });
 
         // Função para carregar os dados do produto no formulário
         const loadProductData = async (productId) => {
@@ -258,8 +305,6 @@ body {
                 await window.saveProduct(product);
             }
         });
-
-        
     </script>
 </body>
 
