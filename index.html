@@ -27,9 +27,10 @@
       border-radius: 15px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       width: 90%;
-      max-width: 350px;
+      max-width: 400px;
       text-align: center;
       animation: fadeIn 1s ease-in-out;
+      margin: 20px; /* Adiciona margem para evitar que fique colado nas laterais */
     }
 
     @keyframes fadeIn {
@@ -61,7 +62,7 @@
 
     /* Título */
     .login-container h2 {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       font-size: 24px;
       color: #0c263e;
       font-weight: 700;
@@ -69,22 +70,22 @@
 
     /* Grupos de Input */
     .input-group {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       text-align: left;
     }
 
     .input-group label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       font-weight: 500;
       color: #555;
     }
 
     .input-group input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #ddd;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 14px;
       outline: none;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -92,18 +93,18 @@
 
     .input-group input:focus {
       border-color: #e77929;
-      box-shadow: 0 0 6px rgba(231, 121, 41, 0.3);
+      box-shadow: 0 0 8px rgba(231, 121, 41, 0.3);
     }
 
     /* Botão de Login */
     .login-button {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background-color: #e77929;
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 14px;
+      border-radius: 10px;
+      font-size: 16px;
       font-weight: 500;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
@@ -121,8 +122,8 @@
     /* Mensagem de Erro */
     .error-message {
       color: #ff4444;
-      margin-top: 10px;
-      font-size: 12px;
+      margin-top: 15px;
+      font-size: 14px;
       animation: shake 0.5s ease-in-out;
     }
 
@@ -131,20 +132,20 @@
         transform: translateX(0);
       }
       25% {
-        transform: translateX(-8px);
+        transform: translateX(-10px);
       }
       50% {
-        transform: translateX(8px);
+        transform: translateX(10px);
       }
       75% {
-        transform: translateX(-8px);
+        transform: translateX(-10px);
       }
     }
 
     /* Links do Rodapé */
     .footer-links {
-      margin-top: 15px;
-      font-size: 12px;
+      margin-top: 20px;
+      font-size: 14px;
     }
 
     .footer-links a {
@@ -162,6 +163,7 @@
     @media (max-width: 480px) {
       .login-container {
         padding: 20px;
+        margin: 10px; /* Margem menor para dispositivos móveis */
       }
 
       .logo {
@@ -169,16 +171,20 @@
       }
 
       .login-container h2 {
-        font-size: 20px;
+        font-size: 22px;
       }
 
       .input-group input {
-        padding: 8px;
-        font-size: 12px;
+        padding: 10px;
+        font-size: 14px;
       }
 
       .login-button {
-        padding: 10px;
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .footer-links {
         font-size: 12px;
       }
     }
