@@ -23,7 +23,7 @@
     /* Container do Login */
     .login-container {
       background: rgba(255, 255, 255, 0.95);
-      padding: 30px;
+      padding: 25px;
       border-radius: 15px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       width: 90%;
@@ -31,6 +31,7 @@
       text-align: center;
       animation: fadeIn 1s ease-in-out;
       margin: 20px; /* Adiciona margem para evitar que fique colado nas laterais */
+      box-sizing: border-box; /* Garante que o padding não aumente o tamanho total */
     }
 
     @keyframes fadeIn {
@@ -82,13 +83,14 @@
     }
 
     .input-group input {
-      width: 100%;
+      width: calc(100% - 24px); /* Ajusta o width para compensar o padding */
       padding: 12px;
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 14px;
       outline: none;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box; /* Garante que o padding não aumente o tamanho total */
     }
 
     .input-group input:focus {
@@ -108,6 +110,7 @@
       font-weight: 500;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
+      box-sizing: border-box; /* Garante que o padding não aumente o tamanho total */
     }
 
     .login-button:hover {
@@ -168,10 +171,12 @@
 
       .logo {
         width: 100px;
+      margin-bottom: 15px;
       }
 
       .login-container h2 {
         font-size: 22px;
+        margin-bottom: 15px;
       }
 
       .input-group input {
