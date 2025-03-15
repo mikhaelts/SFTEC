@@ -254,7 +254,13 @@
         })
         .catch((error) => {
           // Tratamento de erros
-          errorMessage.textContent = error.message;
+          if (error.code === 'auth/wrong-password') {
+            errorMessage.textContent = 'Senha incorreta. Por favor, tente novamente.';
+          } else if (error.code === 'auth/user-not-found') {
+            errorMessage.textContent = 'Usuário não encontrado. Verifique o email digitado.';
+          } else {
+            errorMessage.textContent = 'Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.';
+          }
         });
     });
   </script>
