@@ -161,6 +161,8 @@ body {
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
+        
+
         // Função para carregar os dados do produto no formulário
         const loadProductData = async (productId) => {
             const productRef = ref(database, `products/${productId}`);
@@ -256,6 +258,8 @@ body {
                 await window.saveProduct(product);
             }
         });
+
+        
     </script>
 </body>
 
