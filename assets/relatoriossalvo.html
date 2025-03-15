@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <style>
-        :root {
+              :root {
     --primary-color: #e77929;
     --secondary-color: #000000;
     --bg-color: #f8f9fa;
@@ -197,9 +197,39 @@ body {
     transform: scale(0.9);
 }
       
+   
+
+        /* Estilo para a mensagem de erro */
+        .auth-message {
+            position: fixed;
+            top: 70px; /* Ajuste para ficar abaixo da navbar */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ff4444;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 999; /* Garante que a mensagem fique acima de outros elementos */
+            animation: fadeIn 0.5s ease-in-out;
+            display: none; /* Inicialmente oculta */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Mensagem de usuário não autenticado -->
+    <div id="auth-message" class="auth-message">Usuário não autenticado. Redirecionando para o login...</div>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light">
@@ -283,6 +313,7 @@ body {
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
         import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC9vAauXiePp9M551lm3EzrbarRiRW4xI8",
@@ -296,6 +327,24 @@ body {
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Elemento da mensagem de autenticação
+        const authMessage = document.getElementById('auth-message');
+
+        // Verifica o estado de autenticação do usuário
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Exibe a mensagem de usuário não autenticado
+                authMessage.style.display = 'block';
+
+                // Redireciona para a página de login após 3 segundos
+                setTimeout(() => {
+                    window.location.href = 'login.html'; // Altere para o caminho da sua página de login
+                }, 3000); // 3 segundos de atraso
+            }
+            // Se o usuário estiver logado, permite o acesso à página
+        });
 
         // Função para carregar os relatórios
         async function loadReports(startDate, endDate) {
