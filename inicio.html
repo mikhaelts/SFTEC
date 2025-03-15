@@ -49,6 +49,39 @@
     function redirectTo(page) {
       window.location.href = page;
     }
+
+    
+  </script>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Importe as funções necessárias do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+    // Configuração do Firebase (use a mesma configuração da sua página de login)
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9vAauXiePp9M551lm3EzrbarRiRW4xI8",
+      authDomain: "sftec-b88c3.firebaseapp.com",
+      databaseURL: "https://sftec-b88c3-default-rtdb.firebaseio.com",
+      projectId: "sftec-b88c3",
+      storageBucket: "sftec-b88c3.firebasestorage.app",
+      messagingSenderId: "240727673529",
+      appId: "1:240727673529:web:063244b1d3548c0e876968"
+    };
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Verifica o estado de autenticação do usuário
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Se o usuário não estiver logado, redireciona para a página de login
+        window.location.href = '/login.html'; // Altere para o caminho da sua página de login
+      }
+      // Se o usuário estiver logado, permite o acesso à página
+    });
   </script>
 </body>
 </html>
