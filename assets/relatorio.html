@@ -234,6 +234,7 @@ body {
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
         import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC9vAauXiePp9M551lm3EzrbarRiRW4xI8",
@@ -247,9 +248,25 @@ body {
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Verificar se o usuário está logado
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Redirecionar para a página de login se o usuário não estiver logado
+                window.location.href = "/index.html";
+            }
+        });
 
         document.getElementById('maintenanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const user = auth.currentUser;
+            if (!user) {
+                alert("Você precisa estar logado para salvar um relatório.");
+                window.location.href = "/login.html";
+                return;
+            }
 
             const atendimentoData = document.getElementById('atendimentoData').value;
             const descricao = document.getElementById('descricao').value;
@@ -264,7 +281,8 @@ body {
                     descricao,
                     valor,
                     observacao,
-                    custo
+                    custo,
+                    userId: user.uid // Adicionar o ID do usuário ao relatório
                 });
 
                 document.getElementById('maintenanceForm').reset();
